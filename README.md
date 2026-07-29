@@ -2,6 +2,9 @@
 
 Dataset: https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews?resource=download
 
+## Comando para rodar
+python3 projeto.py --csv dataset/Reviews.csv
+
 ## Visão geral
 
 Este projeto implementa um sistema de recomendação usando o dataset **Amazon Fine Food Reviews**.
