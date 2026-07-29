@@ -877,38 +877,59 @@ def salvar_figura(fig, caminho: Path) -> None:
     plt.close(fig)
 
 
-def grafico_analise_exploratoria(df: pd.DataFrame, caminho: Path) -> None:
-    """Gera gráficos sobre notas e quantidade de avaliações por entidade."""
-    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-    fig.suptitle("Análise Exploratória do Dataset", fontsize=15, fontweight="bold")
+def grafico_analise_exploratoria(df: pd.DataFrame, pasta_graficos: Path) -> None:
+    """Gera os gráficos de análise exploratória, um por arquivo.
 
+        Cada gráfico (distribuição de notas, avaliações por usuário,
+        avaliações por produto e média de score por produto) é salvo em um
+        PNG individual dentro de pasta_graficos, o que facilita reaproveitar
+        cada figura separadamente (por exemplo, em relatórios ou slides)."""
+
+    # 1) Distribuição das avaliações (Score)
+    fig1, ax1 = plt.subplots(figsize=(7, 5))
     cont_notas = df["Score"].value_counts().sort_index()
-    axes[0, 0].bar(cont_notas.index.astype(str), cont_notas.values)
-    axes[0, 0].set_title("Distribuição das avaliações")
-    axes[0, 0].set_xlabel("Score")
-    axes[0, 0].set_ylabel("Quantidade")
+    ax1.bar(cont_notas.index.astype(str), cont_notas.values, color="#3498db")
+    ax1.set_title("Distribuição das avaliações")
+    ax1.set_xlabel("Score")
+    ax1.set_ylabel("Quantidade")
+    ax1.grid(True, alpha=0.25, axis="y")
+    salvar_figura(fig1, pasta_graficos / "exploratoria_distribuicao_avaliacoes.png")
+    print("PNG salvo: exploratoria_distribuicao_avaliacoes.png")
 
+    # 2) Avaliações por usuário
+    fig2, ax2 = plt.subplots(figsize=(7, 5))
     cont_user = df["UserId"].value_counts()
-    axes[0, 1].hist(cont_user.values, bins=40)
-    axes[0, 1].set_title("Avaliações por usuário")
-    axes[0, 1].set_xlabel("Quantidade de avaliações")
-    axes[0, 1].set_ylabel("Usuários")
-    axes[0, 1].set_yscale("log")
+    ax2.hist(cont_user.values, bins=40, color="#2ecc71")
+    ax2.set_title("Avaliações por usuário")
+    ax2.set_xlabel("Quantidade de avaliações")
+    ax2.set_ylabel("Usuários")
+    ax2.set_yscale("log")
+    ax2.grid(True, alpha=0.25, axis="y")
+    salvar_figura(fig2, pasta_graficos / "exploratoria_avaliacoes_por_usuario.png")
+    print("PNG salvo: exploratoria_avaliacoes_por_usuario.png")
 
+    # 3) Avaliações por produto
+    fig3, ax3 = plt.subplots(figsize=(7, 5))
     cont_prod = df["ProductId"].value_counts()
-    axes[1, 0].hist(cont_prod.values, bins=40)
-    axes[1, 0].set_title("Avaliações por produto")
-    axes[1, 0].set_xlabel("Quantidade de avaliações")
-    axes[1, 0].set_ylabel("Produtos")
-    axes[1, 0].set_yscale("log")
+    ax3.hist(cont_prod.values, bins=40, color="#e67e22")
+    ax3.set_title("Avaliações por produto")
+    ax3.set_xlabel("Quantidade de avaliações")
+    ax3.set_ylabel("Produtos")
+    ax3.set_yscale("log")
+    ax3.grid(True, alpha=0.25, axis="y")
+    salvar_figura(fig3, pasta_graficos / "exploratoria_avaliacoes_por_produto.png")
+    print("PNG salvo: exploratoria_avaliacoes_por_produto.png")
 
+    # 4) Média de score por produto
+    fig4, ax4 = plt.subplots(figsize=(7, 5))
     medias_prod = df.groupby("ProductId")["Score"].mean()
-    axes[1, 1].hist(medias_prod.values, bins=30)
-    axes[1, 1].set_title("Média de score por produto")
-    axes[1, 1].set_xlabel("Score médio")
-    axes[1, 1].set_ylabel("Produtos")
-
-    salvar_figura(fig, caminho)
+    ax4.hist(medias_prod.values, bins=30, color="#9b59b6")
+    ax4.set_title("Média de score por produto")
+    ax4.set_xlabel("Score médio")
+    ax4.set_ylabel("Produtos")
+    ax4.grid(True, alpha=0.25, axis="y")
+    salvar_figura(fig4, pasta_graficos / "exploratoria_media_score_produto.png")
+    print("PNG salvo: exploratoria_media_score_produto.png")
 
 
 def grafico_matriz_confusao(y_real, y_pred, caminho: Path, threshold: float) -> None:
@@ -971,7 +992,10 @@ def grafico_ranking(tabela: pd.DataFrame, k: int, caminho: Path) -> None:
 # 6. SAÍDAS GRÁFICAS MANTIDAS DA VERSÃO INICIAL
 # =============================================================================
 # Estas saídas foram preservadas para não alterar resultados já utilizados
-# durante o desenvolvimento do projeto.
+# durante o desenvolvimento do projeto. Cada gráfico e cada tabela agora é
+# salvo em seu próprio arquivo PNG (nada de múltiplos subplots no mesmo
+# arquivo), o que facilita usar cada figura individualmente em relatórios,
+# artigos e apresentações.
 def gerar_saidas_originais(
     resultados_cv: dict,
     ratings_reais: list[float],
@@ -990,43 +1014,97 @@ def gerar_saidas_originais(
     """Gera as figuras e tabelas presentes na versão inicial do projeto.
 
         Essas saídas foram mantidas para preservar compatibilidade com os resultados
-        já utilizados pelo grupo durante o desenvolvimento."""
+        já utilizados pelo grupo durante o desenvolvimento. A diferença em relação à
+        versão anterior é que cada gráfico agora sai em um arquivo PNG separado."""
     rng = np.random.default_rng(SEED)
     amostra = rng.choice(len(ratings_reais), min(500, len(ratings_reais)), replace=False)
     reais_amostra = [ratings_reais[i] for i in amostra]
     previstos_amostra = [ratings_previstos[i] for i in amostra]
-
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5))
-    fig.suptitle("Sistema de Recomendação - Resultados", fontsize=14, fontweight="bold")
-
     folds = range(1, len(resultados_cv["test_rmse"]) + 1)
-    axes[0].plot(folds, resultados_cv["test_rmse"], "o-", color="#e74c3c", label="RMSE", linewidth=2)
-    axes[0].plot(folds, resultados_cv["test_mae"], "s-", color="#3498db", label="MAE", linewidth=2)
-    axes[0].set_title("Métricas por Fold")
-    axes[0].set_xlabel("Fold")
-    axes[0].set_ylabel("Erro")
-    axes[0].legend()
-    axes[0].grid(True, alpha=0.3)
 
-    axes[1].hist(ratings_reais, bins=20, alpha=0.6, color="#2ecc71", label="Real", edgecolor="white")
-    axes[1].hist(ratings_previstos, bins=20, alpha=0.6, color="#e67e22", label="Previsto", edgecolor="white")
-    axes[1].set_title("Distribuição de Ratings")
-    axes[1].set_xlabel("Rating")
-    axes[1].set_ylabel("Frequência")
-    axes[1].legend()
-    axes[1].grid(True, alpha=0.3)
+    # ------------------------------------------------------------------
+    # Gráfico 1: métricas (RMSE/MAE) por fold
+    # ------------------------------------------------------------------
+    fig_fold, ax_fold = plt.subplots(figsize=(6, 5))
+    ax_fold.plot(folds, resultados_cv["test_rmse"], "o-", color="#e74c3c", label="RMSE", linewidth=2)
+    ax_fold.plot(folds, resultados_cv["test_mae"], "s-", color="#3498db", label="MAE", linewidth=2)
+    ax_fold.set_title("Métricas por Fold")
+    ax_fold.set_xlabel("Fold")
+    ax_fold.set_ylabel("Erro")
+    ax_fold.legend()
+    ax_fold.grid(True, alpha=0.3)
+    salvar_figura(fig_fold, pasta_saida / "grafico_metricas_por_fold.png")
+    print("PNG salvo: grafico_metricas_por_fold.png")
 
-    axes[2].scatter(reais_amostra, previstos_amostra, alpha=0.3, color="#9b59b6", s=15)
-    axes[2].plot([1, 5], [1, 5], "r--", linewidth=2, label="Predição perfeita")
-    axes[2].set_title("Rating Real vs Previsto")
-    axes[2].set_xlabel("Rating Real")
-    axes[2].set_ylabel("Rating Previsto")
-    axes[2].legend()
-    axes[2].grid(True, alpha=0.3)
+    # ------------------------------------------------------------------
+    # Gráfico 2: distribuição de ratings reais versus previstos
+    # ------------------------------------------------------------------
+    fig_dist, ax_dist = plt.subplots(figsize=(6, 5))
+    ax_dist.hist(ratings_reais, bins=20, alpha=0.6, color="#2ecc71", label="Real", edgecolor="white")
+    ax_dist.hist(ratings_previstos, bins=20, alpha=0.6, color="#e67e22", label="Previsto", edgecolor="white")
+    ax_dist.set_title("Distribuição de Ratings")
+    ax_dist.set_xlabel("Rating")
+    ax_dist.set_ylabel("Frequência")
+    ax_dist.legend()
+    ax_dist.grid(True, alpha=0.3)
+    salvar_figura(fig_dist, pasta_saida / "grafico_distribuicao_ratings.png")
+    print("PNG salvo: grafico_distribuicao_ratings.png")
 
-    salvar_figura(fig, pasta_saida / "resultados_recomendacao.png")
-    print("PNG salvo: resultados_recomendacao.png")
+    # ------------------------------------------------------------------
+    # Gráfico 3: rating real vs. previsto (dispersão)
+    # ------------------------------------------------------------------
+    fig_disp, ax_disp = plt.subplots(figsize=(6, 5))
+    ax_disp.scatter(reais_amostra, previstos_amostra, alpha=0.3, color="#9b59b6", s=15)
+    ax_disp.plot([1, 5], [1, 5], "r--", linewidth=2, label="Predição perfeita")
+    ax_disp.set_title("Rating Real vs Previsto")
+    ax_disp.set_xlabel("Rating Real")
+    ax_disp.set_ylabel("Rating Previsto")
+    ax_disp.legend()
+    ax_disp.grid(True, alpha=0.3)
+    salvar_figura(fig_disp, pasta_saida / "grafico_real_vs_previsto.png")
+    print("PNG salvo: grafico_real_vs_previsto.png")
 
+    # ------------------------------------------------------------------
+    # Gráfico 4: Top-5 recomendações do primeiro usuário do testset
+    # ------------------------------------------------------------------
+    if top_n:
+        primeiro_usuario = list(top_n.keys())[0]
+        itens_top = [str(item) for item, _ in top_n[primeiro_usuario]]
+        scores_top = [score for _, score in top_n[primeiro_usuario]]
+        cores_bar = ["#3498db", "#2ecc71", "#e67e22", "#9b59b6", "#e74c3c"]
+        fig_top, ax_top = plt.subplots(figsize=(7, 5))
+        bars = ax_top.barh(itens_top[::-1], scores_top[::-1], color=cores_bar[: len(itens_top)])
+        ax_top.set_title(f"Top-5 Recomendações (Usuário {primeiro_usuario})")
+        ax_top.set_xlabel("Rating Previsto")
+        ax_top.set_xlim(0, 5.8)
+        for bar, score in zip(bars, scores_top[::-1]):
+            ax_top.text(bar.get_width() + 0.05, bar.get_y() + bar.get_height() / 2, f"{score:.2f}", va="center")
+        ax_top.grid(True, alpha=0.3, axis="x")
+        salvar_figura(fig_top, pasta_saida / "grafico_top5_recomendacoes.png")
+        print("PNG salvo: grafico_top5_recomendacoes.png")
+
+    # ------------------------------------------------------------------
+    # Gráfico 5 e 6: cartões com total de usuários e total de itens
+    # ------------------------------------------------------------------
+    for nome_arquivo, titulo, valor, cor in [
+        ("grafico_total_usuarios.png", "Total de Usuários", str(trainset_full.n_users), "#3498db"),
+        ("grafico_total_itens.png", "Total de Itens", str(trainset_full.n_items), "#2ecc71"),
+    ]:
+        fig_card, ax_card = plt.subplots(figsize=(5, 3.5))
+        ax_card.set_facecolor("white")
+        for spine in ax_card.spines.values():
+            spine.set_edgecolor(cor)
+            spine.set_linewidth(3)
+        ax_card.set_xticks([])
+        ax_card.set_yticks([])
+        ax_card.text(0.5, 0.60, valor, transform=ax_card.transAxes, ha="center", va="center", fontsize=28, fontweight="bold", color=cor)
+        ax_card.text(0.5, 0.25, titulo, transform=ax_card.transAxes, ha="center", va="center", fontsize=13, color="#555555")
+        salvar_figura(fig_card, pasta_saida / nome_arquivo)
+        print(f"PNG salvo: {nome_arquivo}")
+
+    # ------------------------------------------------------------------
+    # Tabela 1: métricas por fold (cross-validation)
+    # ------------------------------------------------------------------
     fig_t1, ax_t1 = plt.subplots(figsize=(7, 4))
     ax_t1.axis("off")
     ax_t1.text(
@@ -1212,61 +1290,6 @@ def gerar_saidas_originais(
     salvar_figura(fig_r, pasta_saida / "tabela_resumo.png")
     print("PNG salvo: tabela_resumo.png")
 
-    fig_dash, axes_dash = plt.subplots(3, 2, figsize=(16, 14))
-    fig_dash.patch.set_facecolor("#f0f2f5")
-    fig_dash.suptitle("Sistema de Recomendação — Dashboard", fontsize=16, fontweight="bold")
-
-    for ax, titulo, valor, cor in [
-        (axes_dash[0][0], "Total de Usuários", str(trainset_full.n_users), "#3498db"),
-        (axes_dash[0][1], "Total de Itens", str(trainset_full.n_items), "#2ecc71"),
-    ]:
-        ax.set_facecolor("white")
-        for spine in ax.spines.values():
-            spine.set_edgecolor(cor)
-            spine.set_linewidth(3)
-        ax.set_xticks([])
-        ax.set_yticks([])
-        ax.text(0.5, 0.60, valor, transform=ax.transAxes, ha="center", va="center", fontsize=28, fontweight="bold", color=cor)
-        ax.text(0.5, 0.25, titulo, transform=ax.transAxes, ha="center", va="center", fontsize=13, color="#555555")
-
-    axes_dash[1][0].plot(folds, resultados_cv["test_rmse"], "o-", color="#e74c3c", label="RMSE", linewidth=2)
-    axes_dash[1][0].plot(folds, resultados_cv["test_mae"], "s-", color="#3498db", label="MAE", linewidth=2)
-    axes_dash[1][0].set_title("Métricas por Fold")
-    axes_dash[1][0].legend()
-    axes_dash[1][0].grid(True, alpha=0.3)
-
-    axes_dash[1][1].hist(ratings_reais, bins=20, alpha=0.6, color="#2ecc71", label="Real", edgecolor="white")
-    axes_dash[1][1].hist(ratings_previstos, bins=20, alpha=0.6, color="#e67e22", label="Previsto", edgecolor="white")
-    axes_dash[1][1].set_title("Distribuição de Ratings")
-    axes_dash[1][1].legend()
-    axes_dash[1][1].grid(True, alpha=0.3)
-
-    axes_dash[2][0].scatter(reais_amostra, previstos_amostra, alpha=0.3, color="#9b59b6", s=15)
-    axes_dash[2][0].plot([1, 5], [1, 5], "r--", linewidth=2, label="Predição perfeita")
-    axes_dash[2][0].set_title("Rating Real vs Previsto")
-    axes_dash[2][0].legend()
-    axes_dash[2][0].grid(True, alpha=0.3)
-
-    ax_top = axes_dash[2][1]
-    if top_n:
-        primeiro_usuario = list(top_n.keys())[0]
-        itens_top = [str(item) for item, _ in top_n[primeiro_usuario]]
-        scores_top = [score for _, score in top_n[primeiro_usuario]]
-        cores_bar = ["#3498db", "#2ecc71", "#e67e22", "#9b59b6", "#e74c3c"]
-        bars = ax_top.barh(itens_top[::-1], scores_top[::-1], color=cores_bar[: len(itens_top)])
-        ax_top.set_title(f"Top-5 Recomendações (Usuário {primeiro_usuario})")
-        ax_top.set_xlabel("Rating Previsto")
-        ax_top.set_xlim(0, 5.8)
-        for bar, score in zip(bars, scores_top[::-1]):
-            ax_top.text(bar.get_width() + 0.05, bar.get_y() + bar.get_height() / 2, f"{score:.2f}", va="center")
-        ax_top.grid(True, alpha=0.3, axis="x")
-    else:
-        ax_top.axis("off")
-        ax_top.text(0.5, 0.5, "Sem recomendações", ha="center", va="center")
-
-    salvar_figura(fig_dash, pasta_saida / "dashboard.png")
-    print("PNG salvo: dashboard.png")
-
 
 # =============================================================================
 # 7. PIPELINE PRINCIPAL
@@ -1285,8 +1308,8 @@ def executar_pipeline(args: argparse.Namespace) -> None:
     df, resumo_dados = carregar_amazon(caminho_csv, args, pastas)
     data = criar_dataset_surprise(df, api)
 
-    # Análise exploratória
-    grafico_analise_exploratoria(df, pastas["graficos"] / "analise_exploratoria.png")
+    # Análise exploratória (um PNG por gráfico)
+    grafico_analise_exploratoria(df, pastas["graficos"])
 
     trainset_full = data.build_full_trainset()
     sparsidade = 1 - trainset_full.n_ratings / (trainset_full.n_users * trainset_full.n_items)
@@ -1355,7 +1378,7 @@ def executar_pipeline(args: argparse.Namespace) -> None:
         for rank, (item, score) in enumerate(recs, 1):
             print(f"    {rank}. Item {item} — {score:.2f} ⭐")
 
-    # Gera todos os arquivos originais
+    # Gera todos os arquivos originais (agora um gráfico por arquivo)
     gerar_saidas_originais(
         resultados_cv=resultados_cv,
         ratings_reais=ratings_reais,
