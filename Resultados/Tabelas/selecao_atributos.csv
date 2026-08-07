@@ -1,0 +1,11 @@
+﻿atributo,tipo_conceitual,significado,uso,selecionado_no_modelo
+Id,identificador,índice da avaliação,não usado no modelo,False
+ProductId,categórico nominal,identificador do produto,usado pelo recomendador,True
+UserId,categórico nominal,identificador do usuário,usado pelo recomendador,True
+ProfileName,categórico nominal,nome público do usuário,não usado no modelo,False
+HelpfulnessNumerator,numérico discreto,votos de utilidade recebidos,não representa preferência pelo produto,False
+HelpfulnessDenominator,numérico discreto,total de votos de utilidade,não representa preferência pelo produto,False
+Score,ordinal numérico,avaliação de 1 a 5,alvo previsto pelo recomendador,True
+Time,temporal numérico,instante Unix da avaliação,usado para resolver avaliações repetidas e análise temporal,False
+Summary,texto,resumo da avaliação,não usado no modelo atual,False
+Text,texto,conteúdo da avaliação,não usado no modelo atual,False

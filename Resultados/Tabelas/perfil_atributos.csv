@@ -1,0 +1,11 @@
+﻿atributo,dtype_original,tipo_conceitual,significado,uso,faltantes,completude_pct,valores_unicos
+Id,int64,identificador,índice da avaliação,não usado no modelo,0,100.0,568454
+ProductId,str,categórico nominal,identificador do produto,usado pelo recomendador,0,100.0,74258
+UserId,str,categórico nominal,identificador do usuário,usado pelo recomendador,0,100.0,256059
+ProfileName,str,categórico nominal,nome público do usuário,não usado no modelo,26,99.99542619103745,218415
+HelpfulnessNumerator,int64,numérico discreto,votos de utilidade recebidos,não representa preferência pelo produto,0,100.0,231
+HelpfulnessDenominator,int64,numérico discreto,total de votos de utilidade,não representa preferência pelo produto,0,100.0,234
+Score,int64,ordinal numérico,avaliação de 1 a 5,alvo previsto pelo recomendador,0,100.0,5
+Time,int64,temporal numérico,instante Unix da avaliação,usado para resolver avaliações repetidas e análise temporal,0,100.0,3168
+Summary,str,texto,resumo da avaliação,não usado no modelo atual,27,99.99525027530811,295742
+Text,str,texto,conteúdo da avaliação,não usado no modelo atual,0,100.0,393579
