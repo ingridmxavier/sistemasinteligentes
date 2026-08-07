@@ -1436,11 +1436,12 @@ def executar_pipeline(args: argparse.Namespace) -> None:
         tabela_modelos, pastas["graficos"] / "comparacao_modelos.png"
     )
 
-    # Matriz de confusão do SVD
+    # Matriz de confusão do SVD (salva na pasta raiz, junto com os demais
+    # gráficos principais, em vez da subpasta graficos/)
     grafico_matriz_confusao(
         np.asarray(y_real),
         np.asarray(y_previsto),
-        pastas["graficos"] / "matriz_confusao_svd.png",
+        pastas["raiz"] / "matriz_confusao_svd.png",
         args.rating_threshold,
     )
 
