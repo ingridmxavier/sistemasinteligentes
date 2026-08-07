@@ -1,0 +1,107 @@
+{
+  "arquivo": "dataset/Reviews.csv",
+  "linhas_lidas": 568454,
+  "linhas_incompletas_removidas": 0,
+  "notas_fora_da_escala_1_5": 0,
+  "duplicatas_exatas_removidas": 3329,
+  "pares_usuario_produto_repetidos": 4321,
+  "avaliacoes_antes_k_core": 560804,
+  "avaliacoes_finais": 166953,
+  "usuarios_finais": 17400,
+  "produtos_finais": 4907,
+  "esparsidade": 0.9980446301202364,
+  "nota_media": 4.179942858169665,
+  "nota_mediana": 5.0,
+  "nota_desvio_padrao": 1.241726211065058,
+  "min_avaliacoes_usuario": 5,
+  "max_avaliacoes_usuario": 207,
+  "min_avaliacoes_produto": 5,
+  "max_avaliacoes_produto": 551,
+  "normalizacao_aplicada": false,
+  "justificativa_escala": "UserId e ProductId são identificadores categóricos e não devem ser normalizados. Score já está na mesma escala ordinal de 1 a 5.",
+  "atributos_usados": [
+    "UserId",
+    "ProductId",
+    "Score"
+  ],
+  "historico_filtro_k_core": [
+    {
+      "iteracao": 1,
+      "avaliacoes": 211485,
+      "usuarios": 23069,
+      "produtos": 17510
+    },
+    {
+      "iteracao": 2,
+      "avaliacoes": 182961,
+      "usuarios": 20578,
+      "produtos": 6477
+    },
+    {
+      "iteracao": 3,
+      "avaliacoes": 173182,
+      "usuarios": 18076,
+      "produtos": 5947
+    },
+    {
+      "iteracao": 4,
+      "avaliacoes": 169725,
+      "usuarios": 17868,
+      "produtos": 5172
+    },
+    {
+      "iteracao": 5,
+      "avaliacoes": 168269,
+      "usuarios": 17544,
+      "produtos": 5106
+    },
+    {
+      "iteracao": 6,
+      "avaliacoes": 167657,
+      "usuarios": 17505,
+      "produtos": 4985
+    },
+    {
+      "iteracao": 7,
+      "avaliacoes": 167330,
+      "usuarios": 17432,
+      "produtos": 4972
+    },
+    {
+      "iteracao": 8,
+      "avaliacoes": 167140,
+      "usuarios": 17428,
+      "produtos": 4928
+    },
+    {
+      "iteracao": 9,
+      "avaliacoes": 167063,
+      "usuarios": 17411,
+      "produtos": 4925
+    },
+    {
+      "iteracao": 10,
+      "avaliacoes": 166999,
+      "usuarios": 17409,
+      "produtos": 4911
+    },
+    {
+      "iteracao": 11,
+      "avaliacoes": 166965,
+      "usuarios": 17400,
+      "produtos": 4910
+    },
+    {
+      "iteracao": 12,
+      "avaliacoes": 166953,
+      "usuarios": 17400,
+      "produtos": 4907
+    },
+    {
+      "iteracao": 13,
+      "avaliacoes": 166953,
+      "usuarios": 17400,
+      "produtos": 4907
+    }
+  ]
+}
