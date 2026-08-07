@@ -3,6 +3,7 @@
 ## Visão geral
 
 Este projeto implementa um sistema de recomendação usando o dataset **Amazon Fine Food Reviews**.
+
 Dataset: https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews?resource=download
 
 O objetivo é estimar preferências dos usuários e gerar recomendações personalizadas de produtos a partir do histórico de avaliações.
