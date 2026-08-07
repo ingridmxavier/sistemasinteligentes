@@ -124,6 +124,18 @@ def criar_argumentos() -> argparse.Namespace:
     parser.add_argument("--max-rows", type=int, default=None)
     parser.add_argument("--knn-memory-mb", type=float, default=1024.0)
     parser.add_argument("--n-jobs", type=int, default=1)
+    parser.add_argument(
+        "--lr-all",
+        type=float,
+        default=0.005,
+        help="Taxa de aprendizado do SVD (padrão: 0.005). Ajuste manual, sem GridSearch.",
+    )
+    parser.add_argument(
+        "--reg-all",
+        type=float,
+        default=0.02,
+        help="Termo de regularização do SVD (padrão: 0.02). Ajuste manual, sem GridSearch.",
+    )
     # ---------------------------------------------------------------------
     # RECURSOS OPCIONAIS DE DESENVOLVIMENTO
     # Não são necessários para reproduzir a execução principal. Foram mantidos
@@ -464,6 +476,13 @@ def carregar_amazon(
                 .mean()
             )
 
+    if pares_repetidos:
+        print(
+            f"Pares usuário-produto repetidos (deduplicados nesta etapa): {pares_repetidos}"
+        )
+    else:
+        print("Nenhum par usuário-produto repetido encontrado (sem duplicação a resolver).")
+
     # O k-core é aplicado depois da limpeza para que os limites mínimos sejam
     # satisfeitos no conjunto que realmente será entregue aos modelos.
     antes_k_core = len(df)
@@ -548,8 +567,8 @@ def parametros_svd(args: argparse.Namespace) -> dict:
     return {
         "n_factors": args.factors,
         "n_epochs": args.epochs,
-        "lr_all": 0.005,
-        "reg_all": 0.02,
+        "lr_all": args.lr_all,
+        "reg_all": args.reg_all,
         "random_state": SEED,
     }
 
