@@ -142,28 +142,6 @@ python projeto_recomendacao_ecommerce.py --csv "caminho\Reviews.csv"
 --ranking-candidates
 ```
 
-## Recursos opcionais mantidos no código
-
-Os itens abaixo foram mantidos porque são úteis para testes, mas não são essenciais ao experimento principal:
-
-- `--quick`
-- `--tune`
-- `--skip-knn`
-- `--no-save-model`
-- `--max-rows`
-- `--knn-memory-mb`
-- `--n-jobs`
-
-Eles estão marcados no código como recursos opcionais.
-
-## Simplificações feitas para a entrega
-
-Foi removido o fallback automático para MovieLens 100k.
-
-Também foi removida a procura automática de `Reviews.csv` em caminhos específicos de computadores pessoais. Agora o programa usa `Reviews.csv` no diretório atual ou o caminho fornecido com `--csv`.
-
-Essa mudança evita que o projeto seja executado acidentalmente com outro dataset.
-
 ## Reprodutibilidade
 
 O código usa uma semente fixa (`SEED = 99`) nas operações aleatórias controláveis.
