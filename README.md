@@ -1,13 +1,9 @@
 # Projeto Final — Sistema de Recomendação para E-commerce
 
-Dataset: https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews?resource=download
-
-## Comando para rodar
-python3 projeto.py --csv dataset/Reviews.csv
-
 ## Visão geral
 
 Este projeto implementa um sistema de recomendação usando o dataset **Amazon Fine Food Reviews**.
+Dataset: https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews?resource=download
 
 O objetivo é estimar preferências dos usuários e gerar recomendações personalizadas de produtos a partir do histórico de avaliações.
 
@@ -190,3 +186,6 @@ Já `recomendacoes_catalogo_top5.csv` busca itens que ainda não foram avaliados
 - `tabelas/perfil_atributos.csv`
 - `tabelas/resumo_preprocessamento.json`
 - `resumo_execucao.json`
+
+## Comando para rodar
+python3 projeto.py --csv dataset/Reviews.csv
